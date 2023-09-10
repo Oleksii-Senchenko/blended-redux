@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/blended-redux/static/css/main.17654e45.css",
+    "main.js": "/blended-redux/static/js/main.73a9ea94.js",
+    "index.html": "/blended-redux/index.html",
+    "main.17654e45.css.map": "/blended-redux/static/css/main.17654e45.css.map",
+    "main.73a9ea94.js.map": "/blended-redux/static/js/main.73a9ea94.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.17654e45.css",
+    "static/js/main.73a9ea94.js"
+  ]
+}
