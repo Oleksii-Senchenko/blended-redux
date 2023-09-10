@@ -12,11 +12,13 @@ const todosSlice = createSlice({
         filteredToDos(state, action) {
 
             state.todos = state.todos.filter(todo => todo.id !== action.payload)
-            console.log(state.todos);
-            console.log(action.payload);
+        },
+        changeTextTodo(state, action) {
+            state.todos = state.todos.map(todo => 
+                todo.id === action.payload.id ? { ...todo, text: action.payload.text } : todo)
         }
     }
 })
 
-export const { addTodo, filteredToDos } = todosSlice.actions
+export const { addTodo, filteredToDos, changeTextTodo } = todosSlice.actions
 export default todosSlice.reducer
