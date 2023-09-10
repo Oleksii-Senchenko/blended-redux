@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 
 import {
@@ -11,78 +11,95 @@ import {
   Text,
   Todo,
 } from 'components';
+import { addTodo, filteredToDos } from 'redux/todosSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-export class App extends Component {
-  state = {
-    todos: [],
-  };
+export function App() {
+  const dispatch = useDispatch();
+  const todos = useSelector(state => state.todos);
 
-  componentDidMount() {
-    const todos = JSON.parse(localStorage.getItem('todos'));
+  // state = {
+  //   todos: [],
+  // };
 
-    if (todos) {
-      this.setState(() => ({ todos }));
-    }
-  }
-  componentDidUpdate(prevProps, prevState) {
-    const { todos } = this.state;
+  // componentDidMount() {
+  //   const todos = JSON.parse(localStorage.getItem('todos'));
 
-    if (prevState.todos !== todos) {
-      localStorage.setItem('todos', JSON.stringify(todos));
-    }
-  }
+  //   if (todos) {
+  //     this.setState(() => ({ todos }));
+  //   }
+  // }
+  // componentDidUpdate(prevProps, prevState) {
+  //   const { todos } = this.state;
 
-  addTodo = text => {
+  //   if (prevState.todos !== todos) {
+  //     localStorage.setItem('todos', JSON.stringify(todos));
+  //   }
+  // }
+  // const [todos, setTodods] = useState(() => {
+  //   return JSON.parse(localStorage.getItem('todos')) || [];
+  // });
+
+  // useEffect(() => {
+  //   // const todos = JSON.parse(localStorage.getItem('todos'));
+  //   // console.log(todos);
+  //   if (todos) {
+  //     setTodods(todos);
+  //   }
+  // }, [todos]);
+
+  // useEffect(() => {
+  //   localStorage.setItem('todos', JSON.stringify(todos));
+  // }, [todos]);
+
+  const transitionTodo = text => {
     const todo = {
       id: nanoid(),
       text,
     };
-
-    this.setState(({ todos }) => ({
-      todos: [...todos, todo],
-    }));
+    // setTodods(todos => [...todos, todo]);
+    dispatch(addTodo(todo));
   };
 
-  handleSubmit = data => {
-    this.addTodo(data);
+  const handleSubmit = data => {
+    transitionTodo(data);
   };
 
-  deleteTodo = id => {
-    this.setState(prevState => ({
-      todos: prevState.todos.filter(todo => todo.id !== id),
-    }));
+  const deleteTodo = id => {
+    dispatch(filteredToDos(id));
+
+    // setTodods(filteredToDos);
+    // this.setState(prevState => ({
+    //   todos: prevState.todos.filter(todo => todo.id !== id),
+    // }));
   };
 
-  render() {
-    const { todos } = this.state;
+  return (
+    <>
+      <Header />
+      <Section>
+        <Container>
+          <SearchForm onSubmit={handleSubmit} />
 
-    return (
-      <>
-        <Header />
-        <Section>
-          <Container>
-            <SearchForm onSubmit={this.handleSubmit} />
+          {todos.length === 0 && (
+            <Text textAlign="center">There are no any todos ... </Text>
+          )}
 
-            {todos.length === 0 && (
-              <Text textAlign="center">There are no any todos ... </Text>
-            )}
-
-            <Grid>
-              {todos.length > 0 &&
-                todos.map((todo, index) => (
-                  <GridItem key={todo.id}>
-                    <Todo
-                      id={todo.id}
-                      text={todo.text}
-                      counter={index + 1}
-                      onClick={this.deleteTodo}
-                    />
-                  </GridItem>
-                ))}
-            </Grid>
-          </Container>
-        </Section>
-      </>
-    );
-  }
+          <Grid>
+            {todos.length > 0 &&
+              todos.map((todo, index) => (
+                <GridItem key={todo.id}>
+                  <Todo
+                    id={todo.id}
+                    text={todo.text}
+                    counter={index + 1}
+                    onClick={deleteTodo}
+                  />
+                </GridItem>
+              ))}
+          </Grid>
+        </Container>
+      </Section>
+    </>
+  );
 }
